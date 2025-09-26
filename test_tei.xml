@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="tr">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main"></title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">BCE227D75670E40DB5E2D91F0DD6AEC9</idno>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.7.1" ident="GROBID" when="2025-09-25T14:35+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract/>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="tr">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0" /><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head></head><label></label><figDesc>inci basamaktan reel sabit katsayılı lineer homojen diferansiyel denklemini göz önüne alalım. (a) Diferansiyel denklem asimptotik kararlı ise olduğunu gösteriniz. (b) Eğer ilgili karakteristik polinomun tüm kökleri reel ise, (a) şıkkındaki ifadenin tersinin doğru olduğunu gösteriniz. (İpucu. Yanlış olduğunu kabul ederek çelişki arayınız.) (c) Bir örnek yardımıyla (a) şıkkının tersinin genel olarak doğru olmadığını gösteriniz. 6. (a) fonksiyonunun aralığında Lipschitz koşulunu sağlamadığını gösteriniz. Bu olumsuzluğun başlangıç değer probleminin davranışı üzerine nasıl yansıdığını tartışınız. Sayfa 3 www.acikders.org.tr (b) fonksiyonunun orijini içeren her hangi bir şeridinde Lipschitz koşulunu sağlamadığını gösteriniz. Bu olumsuzluğun başlangıç değer probleminin davranışı üzerine nasıl yansıdığını tartışınız.</figDesc></figure>
+		</body>
+		<back>
+			<div type="references">
+
+				<listBibl/>
+			</div>
+		</back>
+	</text>
+</TEI>
