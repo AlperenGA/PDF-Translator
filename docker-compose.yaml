@@ -1,0 +1,20 @@
+services:
+  grobid:
+    image: lfoppiano/grobid:0.7.2
+    container_name: grobid
+    restart: unless-stopped
+    platform: linux/amd64   # Apple Silicon için gerekli
+    ports:
+      - "8070:8070"
+      - "8071:8071"
+    environment:
+      - JAVA_OPTS=-Xms512m -Xmx3g
+      - GROBID_HOME=/opt/grobid/grobid-home
+    volumes:
+      - ./grobid-home:/opt/grobid/grobid-home
+      - ./grobid-logs:/opt/grobid/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8070/api/isalive || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 6
