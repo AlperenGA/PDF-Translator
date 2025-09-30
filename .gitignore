@@ -1,40 +1,52 @@
-# Byte-compiled / optimized / DLL files
+# -----------------------
+# Python
+# -----------------------
 __pycache__/
 *.py[cod]
-*$py.class
+*.pyo
+*.pyd
+*.pyc
 
 # Virtual environment
 venv/
-ENV/
 env/
 .venv/
+.env/
 
-# Distribution / packaging
-build/
-dist/
-*.egg-info/
-
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
-
-# macOS
+# -----------------------
+# OS / IDE / Editor
+# -----------------------
 .DS_Store
-
-# VSCode
-.vscode/
-
-# PyCharm
-.idea/
-
-# Hugging Face / Transformers cache
-~/.cache/
-.cache/
-huggingface/
-
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-*.bak
+Thumbs.db
 *.swp
+*.swo
+*.idea/
+*.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# -----------------------
+# LaTeX / PDF / Build outputs
+# -----------------------
+*.aux
+*.log
+*.out
+*.toc
+*.pdf
+*.tex
+
+# -----------------------
+# Output folders
+# -----------------------
+output/
+pdfs/output/
+tmp/
+*.bak
+
+# -----------------------
+# Sensitive / Local files
+# -----------------------
+*.sqlite
+*.db
+*.env
+*.local
