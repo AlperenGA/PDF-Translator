@@ -1,46 +1,39 @@
-import subprocess
-
-LATEX_TEMPLATE = r"""
+def build_latex(items, images_by_page=None):
+    """
+    Çeviri sonrası metin + formülleri düzgün LaTeX formatında PDF’e dönüştürür.
+    """
+    header = r"""
 \documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
-\usepackage{amsmath, graphicx, booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
 \usepackage{geometry}
+\usepackage{fancyvrb}
 \geometry{margin=2cm}
+\pagestyle{plain}
 \begin{document}
+"""
+    body = []
+    page_idx = 1
 
-%s
+    for item in items:
+        if item["type"] == "text":
+            body.append(item["content"] + "\n\n\\par\n")
+        elif item["type"] == "formula":
+            body.append("\\begin{equation}\n" + item["content"] + "\n\\end{equation}\n")
+        elif item["type"] == "pagebreak":
+            # Görselleri ekle
+            if images_by_page and page_idx in images_by_page:
+                for i, img in enumerate(images_by_page[page_idx]):
+                    body.append(
+                        "\\begin{figure}[ht]\n\\centering\n"
+                        f"\\includegraphics[width=0.9\\textwidth]{{{img}}}\n"
+                        "\\end{figure}\n\n"
+                    )
+            body.append("\\clearpage\n")
+            page_idx += 1
 
+    footer = r"""
 \end{document}
 """
-
-def format_table(table_soup):
-    rows = table_soup.find_all("row")
-    latex = "\\begin{tabular}{%s}\n" % ("c" * len(rows[0].find_all("cell")))
-    latex += "\\toprule\n"
-    for row in rows:
-        cells = [c.get_text(strip=True) for c in row.find_all("cell")]
-        latex += " & ".join(cells) + " \\\\\n"
-    latex += "\\bottomrule\n\\end{tabular}\n"
-    return latex
-
-def build_latex(blocks, images):
-    latex_blocks = []
-    for i, block in enumerate(blocks, start=1):
-        if block["type"] == "text":
-            latex_blocks.append(block["content"])
-        elif block["type"] == "formula":
-            latex_blocks.append(f"\\[{block['content']}\\]")
-        elif block["type"] == "table":
-            latex_blocks.append(format_table(block["content"]))
-        if i in images:
-            for img in images[i]:
-                latex_blocks.append(f"\\includegraphics[width=0.5\\textwidth]{{{img}}}")
-    return LATEX_TEMPLATE % "\n\n".join(latex_blocks)
-
-def save_pdf(latex_content: str, output_file):
-    tex_file = output_file.with_suffix(".tex")
-    tex_file.write_text(latex_content, encoding="utf-8")
-    subprocess.run(
-        ["pdflatex", "-interaction=nonstopmode", "-output-directory", str(output_file.parent), str(tex_file)],
-        check=True
-    )
+    return header + "".join(body) + footer
