@@ -1,8 +1,7 @@
-def build_latex(items, images_by_page=None):
-    """
-    Çeviri sonrası metin + formülleri düzgün LaTeX formatında PDF’e dönüştürür.
-    """
-    header = r"""
+from pathlib import Path
+from typing import Dict, List
+
+LATEX_HEADER = r"""
 \documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath,amssymb}
@@ -13,27 +12,79 @@ def build_latex(items, images_by_page=None):
 \pagestyle{plain}
 \begin{document}
 """
-    body = []
-    page_idx = 1
 
-    for item in items:
-        if item["type"] == "text":
-            body.append(item["content"] + "\n\n\\par\n")
-        elif item["type"] == "formula":
-            body.append("\\begin{equation}\n" + item["content"] + "\n\\end{equation}\n")
-        elif item["type"] == "pagebreak":
-            # Görselleri ekle
-            if images_by_page and page_idx in images_by_page:
-                for i, img in enumerate(images_by_page[page_idx]):
-                    body.append(
-                        "\\begin{figure}[ht]\n\\centering\n"
-                        f"\\includegraphics[width=0.9\\textwidth]{{{img}}}\n"
-                        "\\end{figure}\n\n"
-                    )
-            body.append("\\clearpage\n")
-            page_idx += 1
-
-    footer = r"""
+LATEX_FOOTER = r"""
 \end{document}
 """
-    return header + "".join(body) + footer
+
+
+def escape_latex(text: str) -> str:
+    """
+    LaTeX'te özel karakterlerden dolayı hata çıkmasını engeller.
+    """
+    replacements = {
+        "&": r"\&",
+        "%": r"\%",
+        "$": r"\$",
+        "#": r"\#",
+        "_": r"\_",
+        "{": r"\{",
+        "}": r"\}",
+        "~": r"\textasciitilde{}",
+        "^": r"\^{}",
+        "\\": r"\textbackslash{}",
+    }
+    for k, v in replacements.items():
+        text = text.replace(k, v)
+    return text
+
+
+def build_latex_document(
+    translated_pages: Dict[int, List[str]],
+    formulas: Dict[int, List[str]],
+    images: Dict[int, List[Path]]
+) -> str:
+    """
+    PDF'ten alınan çeviri, formül ve görselleri LaTeX dokümanına dönüştürür.
+    Sayfa sırası korunur.
+    """
+    content = [LATEX_HEADER]
+
+    for page_num in sorted(translated_pages.keys()):
+        content.append(f"% Page {page_num}\n")
+
+        # Çeviri metinleri
+        for paragraph in translated_pages[page_num]:
+            paragraph = paragraph.strip()
+            if paragraph:
+                content.append(escape_latex(paragraph) + "\n\n")
+
+        # Formüller
+        if page_num in formulas:
+            for formula in formulas[page_num]:
+                content.append("\\begin{equation}\n")
+                content.append(formula.strip() + "\n")
+                content.append("\\end{equation}\n\n")
+
+        # Görseller
+        if page_num in images:
+            for img_path in images[page_num]:
+                content.append("\\begin{figure}[ht]\n")
+                content.append("\\centering\n")
+                content.append(f"\\includegraphics[width=0.9\\textwidth]{{{img_path.name}}}\n")
+                content.append("\\end{figure}\n\n")
+
+        # Sayfa sonu
+        content.append("\\clearpage\n")
+
+    content.append(LATEX_FOOTER)
+    return "".join(content)
+
+
+def save_latex_file(output_path: Path, latex_code: str):
+    """
+    LaTeX çıktısını .tex dosyasına kaydeder.
+    """
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(latex_code)

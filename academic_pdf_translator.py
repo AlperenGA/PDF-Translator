@@ -131,5 +131,5 @@ def translate_pdf(pdf_path: str):
 # 7. ÇALIŞTIRMA
 # ------------------------
 if __name__ == "__main__":
-    input_pdf = "sample.pdf"  # input PDF dosyan
+    input_pdf = "pdfs/PS4.pdf"  # input PDF dosyan
     translate_pdf(input_pdf)

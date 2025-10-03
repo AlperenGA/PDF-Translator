@@ -1,14 +1,29 @@
-from bs4 import BeautifulSoup
+import xml.etree.ElementTree as ET
 
-def extract_blocks(tei_xml: str):
-    soup = BeautifulSoup(tei_xml, "lxml")
+def parse_tei(xml_content):
+    """
+    TEI XML çıktısını parse eder ve bloklara ayırır.
+    Dönüş listesi: [{ "type": "paragraph"/"formula"/"pb", "content": "..." }]
+    """
+    items = []
+    try:
+        root = ET.fromstring(xml_content)
 
-    blocks = []
-    for elem in soup.find_all(["p", "formula", "table"]):
-        if elem.name == "p":
-            blocks.append({"type": "text", "content": elem.get_text()})
-        elif elem.name == "formula":
-            blocks.append({"type": "formula", "content": elem.get_text()})
-        elif elem.name == "table":
-            blocks.append({"type": "table", "content": elem})
-    return blocks
+        # Tüm body içeriğini gez
+        for elem in root.iter():
+            tag = elem.tag.lower()
+            if tag.endswith("p"):  # paragraf
+                text = (elem.text or "").strip()
+                if text:
+                    items.append({"type": "paragraph", "content": text})
+            elif "formula" in tag:  # formüller
+                formula = (elem.text or "").strip()
+                if formula:
+                    items.append({"type": "formula", "content": formula})
+            elif tag.endswith("pb"):  # page break
+                items.append({"type": "pb", "content": ""})
+
+    except Exception as e:
+        items.append({"type": "error", "content": f"XML parse error: {e}"})
+
+    return items
